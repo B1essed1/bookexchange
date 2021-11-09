@@ -15,12 +15,6 @@ public class Utils {
         return userService.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
-    @Value("${tokenLogin}")
-    String login;
-
-    @Value("${tokenPwd}")
-    String pass;
-
     public static OkHttpClient getUnsafeOkHttpClient() {
         try {
             final X509TrustManager trustManager = new X509TrustManager() {

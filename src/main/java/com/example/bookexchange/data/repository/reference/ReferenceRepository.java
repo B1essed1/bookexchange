@@ -14,4 +14,8 @@ public interface ReferenceRepository extends CrudRepository<Reference, Long>, Pa
 
     @Query("select r from Reference r where lower(r.code)= ?1")
     Optional<Reference> findByCode(String code);
+
+    @Query("select r from Reference r where r.parent is null and lower(r.code)= ?1")
+    Optional<Reference> findParentByCode(String code);
+
 }

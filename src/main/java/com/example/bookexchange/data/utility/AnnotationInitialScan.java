@@ -1,5 +1,6 @@
 package com.example.bookexchange.data.utility;
 
+import com.example.bookexchange.data.model.reference.Reference;
 import com.example.bookexchange.data.model.system.Permission;
 import com.example.bookexchange.data.model.system.Role;
 import com.example.bookexchange.data.model.system.User;
@@ -42,7 +43,7 @@ public class AnnotationInitialScan {
         this.startPerm();
         this.startRole();
         this.startUser();
-//        this.initializeReferences();
+        this.initializeReferences();
     }
 
     public void startPerm() {
@@ -123,5 +124,38 @@ public class AnnotationInitialScan {
             userService.saveUser(userU);
         }
     }
+
+    private void initializeReferences() {
+        try {
+            for (Constants.ReferenceType type : Constants.ReferenceType.values()) {
+                Reference parent = referenceService.parentByCode(type.name());
+                if (parent == null) {
+                    parent = new Reference();
+                    parent.setCode(type.name());
+                    parent.setNameUz(type.name());
+                    parent.setNameLt(type.name());
+                    parent.setNameRu(type.name());
+                    parent.setNameEn(type.name());
+                    referenceService.saveReference(parent);
+                }
+                if (type.names == null) continue;
+                for (String name : type.names) {
+                    Reference reference = referenceService.findByCode(name);
+                    if (reference != null) continue;
+                    reference = new Reference();
+                    reference.setCode(name);
+                    reference.setNameUz(name);
+                    reference.setNameLt(name);
+                    reference.setNameRu(name);
+                    reference.setNameEn(name);
+                    reference.setParent(parent);
+                    referenceService.saveReference(reference);
+                }
+            }
+        } catch (Throwable throwable) {
+            log.error(throwable.getMessage(), throwable);
+        }
+    }
+
 
 }

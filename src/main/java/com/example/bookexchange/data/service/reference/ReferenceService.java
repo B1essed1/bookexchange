@@ -23,4 +23,18 @@ public class ReferenceService {
             return null;
         }
     }
+
+    public Reference parentByCode(String code) {
+        Optional<Reference> reference = referenceRepository.findParentByCode(code.toLowerCase());
+        if (reference.isPresent()) {
+            return reference.get();
+        } else {
+            return null;
+        }
+    }
+
+    public void saveReference(Reference reference) {
+        referenceRepository.save(reference);
+        log.info("In save - reference: {} successfully saved", reference);
+    }
 }
