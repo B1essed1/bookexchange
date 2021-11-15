@@ -2,12 +2,10 @@ package com.example.bookexchange.data.controller;
 
 import com.example.bookexchange.data.dto.AuthenticationRequestDto;
 import com.example.bookexchange.data.dto.system.RoleDto;
-import com.example.bookexchange.data.exception.RecordNotFoundException;
 import com.example.bookexchange.data.model.system.Role;
 import com.example.bookexchange.data.model.system.User;
 import com.example.bookexchange.data.security.jwt.JwtTokenProvider;
 import com.example.bookexchange.data.service.system.UserService;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,14 +17,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * REST controller for authentication requests (login, logout, register, etc.)
  */
 
 @RestController
-@RequestMapping(value = "/api/v.1")
+@RequestMapping(value = "/api/v.1/login")
 public class AuthenticationController {
 
     private final AuthenticationManager authenticationManager;
@@ -53,6 +54,24 @@ public class AuthenticationController {
             }
         }
         if (user == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        String token = jwtTokenProvider.createToken(user.getUsername(), user.getRole());
+        Role role = user.getRole();
+        List<String> permissionsDto = new ArrayList<>();
+        if (role.getPermissions() != null && role.getPermissions().size() > 0)
+            role.getPermissions().forEach(permission -> permissionsDto.add(permission.getNameUz()));
+        Map<String, Object> response = new HashMap<>();
+        response.put("id", user.getId());
+        response.put("token", token);
+        response.put("username", user.getUsername());
+        response.put("role", new RoleDto(role));
+        response.put("permissions", permissionsDto);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/auth-payload/by-email")
+    public ResponseEntity loginByEmail(@RequestBody AuthenticationRequestDto requestDto) {
+        User user = userService.findByEmail(requestDto.getEmail());
+        if (user == null) return new ResponseEntity("This email address is not registered!", HttpStatus.BAD_REQUEST);
         String token = jwtTokenProvider.createToken(user.getUsername(), user.getRole());
         Role role = user.getRole();
         List<String> permissionsDto = new ArrayList<>();

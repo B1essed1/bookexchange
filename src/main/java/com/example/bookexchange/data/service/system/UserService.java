@@ -89,10 +89,6 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void saveConfirmation(User user) {
-        userRepository.save(user);
-    }
-
     public User findByEmail(String email) {
         User result = userRepository.findByEmail(email);
         log.info("IN findByUsername - user: {} found by username: {}", result, email);

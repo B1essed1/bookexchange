@@ -24,11 +24,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private static final String ADMIN_ENDPOINT = "/api/v.1/admin/**";
-    private static final String LOGIN_ENDPOINT = "/api/v.1/auth-payload";
-    private static final String LOGIN_ENDPOINT2 = "/api/v.1/roamingTimestamp";
-    private static final String VALIDATE_PHONE = "/api/v.1/validate-phone";
-    private static final String CONFIRM_PHONE = "/api/v.1/confirm-phone";
-    private static final String PHOTO = "/api/v.1/photo/**";
+    private static final String REGISTER_ENDPOINT = "/api/v.1/register/**";
+    private static final String LOGIN_ENDPOINT = "/api/v.1/login/**";
+
     private final JwtTokenProvider jwtTokenProvider;
 
     @Autowired
@@ -54,8 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/api/v.1/confirm-email",
                 "/api/v.1/confirm-phone",
                 "/api/v.1/send-message-email",
-                "/api/v.1/send-message-phone",
-                "/api/v.1/validate-phone");
+                "/api/v.1/send-message-phone");
     }
 
     @Override
@@ -68,10 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
-                .antMatchers(VALIDATE_PHONE).permitAll()
-                .antMatchers(CONFIRM_PHONE).permitAll()
-                .antMatchers(LOGIN_ENDPOINT2).permitAll()
-                .antMatchers(PHOTO).permitAll()
+                .antMatchers(REGISTER_ENDPOINT).permitAll()
                 .antMatchers(ADMIN_ENDPOINT).hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()

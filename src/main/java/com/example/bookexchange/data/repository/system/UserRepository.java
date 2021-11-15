@@ -29,5 +29,6 @@ public interface UserRepository extends CrudRepository<User, Long>, PagingAndSor
     @Query("select u from User u where u.phone = ?1")
     Optional<User> findByPhone(String phone);
 
+    @Query("select u from User u where u.email = ?1")
     User findByEmail(String email);
 }

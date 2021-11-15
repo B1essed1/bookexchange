@@ -33,6 +33,12 @@ public class User extends Auditable<String> implements Serializable {
     @Column(name = "username", unique = true)
     private String username;
 
+    @Column(name = "first_name", unique = true)
+    private String firstName;
+
+    @Column(name = "last_name", unique = true)
+    private String lastName;
+
     @Column(name = "password")
     private String password;
 
@@ -69,8 +75,4 @@ public class User extends Auditable<String> implements Serializable {
     private byte[] photo;
 
     private Integer rating;
-
-    public void setUsername(String username) {
-        this.username = username.trim();
-    }
 }

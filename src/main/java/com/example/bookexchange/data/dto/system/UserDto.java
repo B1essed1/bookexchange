@@ -22,6 +22,8 @@ public class UserDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy", timezone = "Asia/Tashkent")
     private Date birthday;
     private String username;
+    private String firstName;
+    private String lastName;
     private String password;
     private String email;
     private String phone;
@@ -34,6 +36,8 @@ public class UserDto {
             setId(user.getId());
         setBirthday(user.getBirthday());
         setUsername(user.getUsername());
+        setFirstName(user.getFirstName());
+        setLastName(user.getLastName());
         setEmail(user.getEmail());
         setPhone(user.getPhone());
 
@@ -53,6 +57,8 @@ public class UserDto {
             user.setId(id);
         user.setBirthday(birthday);
         user.setUsername(username);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
         user.setEmail(email);
         user.setPhone(phone);
         return user;
