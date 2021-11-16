@@ -78,6 +78,22 @@ public class RegistrationController {
         this.emailSenderService = emailSenderService;
     }
 
+    public static Integer shortUUID() {
+        Random uuid = new Random();
+        return uuid.nextInt(9000) + 1000;
+    }
+
+    @RequestMapping(value = "/validate-phone", method = RequestMethod.POST)
+    public ResponseEntity<String> nextPage(@RequestBody UserDto userDto) {
+        User user = userService.findByPhone(userDto.getPhone());
+        if (user != null) {
+            if (user.getPhone() != null && user.getStatus() == referenceService.findByCode("ACTIVE"))
+                return new ResponseEntity<>("This phone already exists...", BAD_REQUEST);
+        }
+        return new ResponseEntity<>("success", HttpStatus.OK);
+    }
+
+
     @Transactional
     @RequestMapping(value = "/send-message-phone", method = RequestMethod.POST)
     public ResponseEntity<String> sendMessagePhone(@RequestBody UserDto userDto) {
@@ -129,55 +145,6 @@ public class RegistrationController {
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
-    @Transactional
-    @RequestMapping(value = "/send-message-phone/by-telegram", method = RequestMethod.POST)
-    public ResponseEntity<String> sendMessagePhoneByTelegram(@RequestBody UserDto userDto) throws IOException {
-        if (userDto.getPhone() == null || userDto.getPhone().equals(""))
-            return new ResponseEntity<>("Not found Phone number", HttpStatus.NOT_FOUND);
-        if (userDto.getPhone().length() != 12 || !userDto.getPhone().startsWith("998"))
-            return new ResponseEntity<>("Invalid Phone", BAD_REQUEST);
-        String newToken = shortUUID().toString();
-        User userDB = userRepository.findByUsername(userDto.getUsername());
-        if (userDB != null) {
-            userDB.setConfirmationToken(newToken);
-            userDB.setPhone(userDto.getPhone());
-            userDB.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
-            userService.save(userDB);
-        } else {
-            User user = new User();
-            user.setConfirmationToken(newToken);
-            user.setPhone(userDto.getPhone());
-//            user.setUsername(userDto.getUsername());
-//            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-            user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
-            user.setStatus(referenceService.findByCode("INACTIVE"));
-            Role role = roleService.findByCode("ROLE_USER");
-            if (role == null) throw new RecordNotFoundException("Role Not Found");
-            user.setRole(role);
-            userService.save(user);
-        }
-
-        assert userDto != null;
-        String urlString = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + channelId +
-                "&text=" + userDto.getPhone() + " " + newToken;
-
-        urlString = String.format(urlString, botToken, channelId, userDto.getPhone() + " " + newToken);
-
-        URL url = new URL(urlString);
-        URLConnection conn = url.openConnection();
-
-        StringBuilder sb = new StringBuilder();
-        InputStream is = new BufferedInputStream(conn.getInputStream());
-        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-        String inputLine = "";
-        while ((inputLine = br.readLine()) != null) {
-            sb.append(inputLine);
-        }
-        String response = sb.toString();
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @RequestMapping(value = "/confirm-phone", method = RequestMethod.POST)
     @Transactional
     public ResponseEntity<Map<String, Object>> validateResetPhone(@Valid @RequestParam(name = "phone") String phone, @RequestParam(name = "code") String confirmationCode) {
@@ -206,21 +173,6 @@ public class RegistrationController {
         response.put("role", new RoleDto(role));
         response.put("permissions", permissionsDto);
         return ResponseEntity.ok(response);
-    }
-
-    public static Integer shortUUID() {
-        Random uuid = new Random();
-        return uuid.nextInt(9000) + 1000;
-    }
-
-    @RequestMapping(value = "/validate-phone", method = RequestMethod.POST)
-    public ResponseEntity<String> nextPage(@RequestBody UserDto userDto) {
-        User user = userService.findByPhone(userDto.getPhone());
-        if (user != null) {
-            if (user.getPhone() != null && user.getStatus() == referenceService.findByCode("ACTIVE"))
-                return new ResponseEntity<>("This phone already exists...", BAD_REQUEST);
-        }
-        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @Transactional
@@ -285,5 +237,54 @@ public class RegistrationController {
         response.put("permissions", permissionsDto);
         response.put("message", "This user successfully registered");
         return ResponseEntity.ok(response);
+    }
+
+    @Transactional
+    @RequestMapping(value = "/send-message-phone/by-telegram", method = RequestMethod.POST)
+    public ResponseEntity<String> sendMessagePhoneByTelegram(@RequestBody UserDto userDto) throws IOException {
+        if (userDto.getPhone() == null || userDto.getPhone().equals(""))
+            return new ResponseEntity<>("Not found Phone number", HttpStatus.NOT_FOUND);
+        if (userDto.getPhone().length() != 12 || !userDto.getPhone().startsWith("998"))
+            return new ResponseEntity<>("Invalid Phone", BAD_REQUEST);
+        String newToken = shortUUID().toString();
+        User userDB = userRepository.findByUsername(userDto.getUsername());
+        if (userDB != null) {
+            userDB.setConfirmationToken(newToken);
+            userDB.setPhone(userDto.getPhone());
+            userDB.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
+            userService.save(userDB);
+        } else {
+            User user = new User();
+            user.setConfirmationToken(newToken);
+            user.setPhone(userDto.getPhone());
+//            user.setUsername(userDto.getUsername());
+//            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
+            user.setStatus(referenceService.findByCode("INACTIVE"));
+            Role role = roleService.findByCode("ROLE_USER");
+            if (role == null) throw new RecordNotFoundException("Role Not Found");
+            user.setRole(role);
+            userService.save(user);
+        }
+
+        assert userDto != null;
+        String urlString = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + channelId +
+                "&text=" + userDto.getPhone() + " " + newToken;
+
+        urlString = String.format(urlString, botToken, channelId, userDto.getPhone() + " " + newToken);
+
+        URL url = new URL(urlString);
+        URLConnection conn = url.openConnection();
+
+        StringBuilder sb = new StringBuilder();
+        InputStream is = new BufferedInputStream(conn.getInputStream());
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        String inputLine = "";
+        while ((inputLine = br.readLine()) != null) {
+            sb.append(inputLine);
+        }
+        String response = sb.toString();
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
