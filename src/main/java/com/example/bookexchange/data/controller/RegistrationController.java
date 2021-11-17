@@ -182,10 +182,10 @@ public class RegistrationController {
         if (userEmail == null || userEmail.equals(""))
             return new ResponseEntity<>("Not found email", HttpStatus.NOT_FOUND);
         String newToken = shortUUID().toString();
-        User userDB = userRepository.findByUsername(userDto.getUsername());
+        User userDB = userRepository.findByEmail(userDto.getEmail());
         if (userDB != null) {
             userDB.setConfirmationToken(newToken);
-            userDB.setPhone(userDto.getEmail());
+            userDB.setEmail(userDto.getEmail());
             userDB.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             userService.save(userDB);
         } else {
@@ -208,7 +208,7 @@ public class RegistrationController {
         mailMessage.setFrom(email);
         mailMessage.setText("To complete the confirmation code here: " + newToken);
         emailSenderService.sendEmail(mailMessage);
-        return new ResponseEntity<>("success", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @RequestMapping(value = "/confirm-email", method = RequestMethod.POST)
