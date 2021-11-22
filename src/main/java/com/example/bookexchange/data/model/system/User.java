@@ -11,8 +11,6 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -32,17 +30,14 @@ public class User extends Auditable<String> implements Serializable {
     @Column(name = "username", unique = true)
     private String username;
 
-    @Column(name = "first_name", unique = true)
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name = "last_name", unique = true)
+    @Column(name = "last_name")
     private String lastName;
 
     @Column(name = "password")
     private String password;
-
-    @Column(name = "surname")
-    private String surname;
 
     @Column(name = "email", unique = true)
     private String email;

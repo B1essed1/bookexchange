@@ -112,7 +112,7 @@ public class RegistrationController {
             User user = new User();
             user.setConfirmationToken(newToken);
             user.setPhone(userDto.getPhone());
-//            user.setUsername(userDto.getUsername());
+            user.setUsername(userDto.getEmail());
 //            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));
@@ -176,7 +176,6 @@ public class RegistrationController {
     }
 
     @Transactional
-//    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/send-message-email", method = RequestMethod.POST)
     public ResponseEntity<String> sendMessage(@RequestBody UserDto userDto) {
         String userEmail = userDto.getEmail();
@@ -193,8 +192,7 @@ public class RegistrationController {
             User user = new User();
             user.setConfirmationToken(newToken);
             user.setEmail(userDto.getEmail());
-            user.setUsername(userDto.getFirstName());
-            user.setUsername(userDto.getLastName());
+            user.setUsername(userDto.getEmail());
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));
             Role role = roleService.findByCode("ROLE_USER");
@@ -213,7 +211,6 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/confirm-email", method = RequestMethod.POST)
-//    @CrossOrigin(origins = "http://localhost:3000")
     @Transactional
     public ResponseEntity<Map<String, Object>> validateResetEmail(@Valid @RequestParam(name = "email") String mail, @RequestParam(name = "code") String confirmationCode) {
         if (mail == null || mail.equals(""))
@@ -259,7 +256,7 @@ public class RegistrationController {
             User user = new User();
             user.setConfirmationToken(newToken);
             user.setPhone(userDto.getPhone());
-//            user.setUsername(userDto.getUsername());
+            user.setUsername(userDto.getEmail());
 //            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));

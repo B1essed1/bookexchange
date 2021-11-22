@@ -16,7 +16,10 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.*;
 
@@ -76,7 +79,6 @@ public class AuthenticationController {
     }
 
     @PostMapping("/auth-payload/by-email")
-//    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> loginByEmail(@RequestBody AuthenticationRequestDto requestDto) {
         User user = userService.findByEmail(requestDto.getEmail());
         if (user == null) return new ResponseEntity("This email address is not registered!", HttpStatus.BAD_REQUEST);
