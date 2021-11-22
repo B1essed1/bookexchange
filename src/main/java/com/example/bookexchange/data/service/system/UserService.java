@@ -74,7 +74,7 @@ public class UserService {
     }
 
     public User saveUser(User user) {
-        User result = findByUsername(user.getUsername());
+        User result = findByUsername(user.getEmail());
         if (result == null) {
             userRepository.save(user);
             return user;

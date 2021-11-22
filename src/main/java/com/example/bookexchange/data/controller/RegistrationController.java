@@ -176,6 +176,7 @@ public class RegistrationController {
     }
 
     @Transactional
+//    @CrossOrigin(origins = "http://localhost:3000")
     @RequestMapping(value = "/send-message-email", method = RequestMethod.POST)
     public ResponseEntity<String> sendMessage(@RequestBody UserDto userDto) {
         String userEmail = userDto.getEmail();
@@ -212,6 +213,7 @@ public class RegistrationController {
     }
 
     @RequestMapping(value = "/confirm-email", method = RequestMethod.POST)
+//    @CrossOrigin(origins = "http://localhost:3000")
     @Transactional
     public ResponseEntity<Map<String, Object>> validateResetEmail(@Valid @RequestParam(name = "email") String mail, @RequestParam(name = "code") String confirmationCode) {
         if (mail == null || mail.equals(""))

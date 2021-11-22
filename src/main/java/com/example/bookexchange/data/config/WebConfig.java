@@ -1,5 +1,6 @@
 package com.example.bookexchange.data.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -16,6 +17,9 @@ import javax.servlet.http.HttpServletResponse;
 @EnableWebMvc
 public class WebConfig implements Filter, WebMvcConfigurer {
 
+    @Value("${webApi}")
+    String webApi;
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**");
@@ -29,6 +33,7 @@ public class WebConfig implements Filter, WebMvcConfigurer {
         response.setHeader("Access-Control-Allow-Origin", "*");
         response.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE");
         response.setHeader("Access-Control-Allow-Headers", "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With,observe");
+        response.setHeader("Access-Control-Allow-Origin", webApi);
         response.setHeader("Access-Control-Max-Age", "3600");
         response.setHeader("Access-Control-Allow-Credentials", "true");
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
@@ -43,7 +48,7 @@ public class WebConfig implements Filter, WebMvcConfigurer {
             }
         } else {
             System.out.println("Pre-flight");
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Origin", webApi);
             response.setHeader("Access-Control-Allow-Methods", "POST,GET,DELETE,PUT");
             response.setHeader("Access-Control-Max-Age", "3600");
             response.setHeader("Access-Control-Allow-Headers", "Access-Control-Expose-Headers" + "Authorization, content-type," +
