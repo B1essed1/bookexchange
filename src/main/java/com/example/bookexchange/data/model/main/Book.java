@@ -7,7 +7,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -22,10 +25,31 @@ public class Book extends Auditable<String> {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @NotEmpty(message = "kitob nomi kiritilishi shart")
     private String name;
     private String description;
-    private Integer size;
+    private int size;
+    @NotEmpty
+    private String language;
     private Enum<CoverType> coverType;
-    private Integer quantity;
+    @NotEmpty(message = "kitob soni kiritilishi shart")
+    private int quantity;
     private LocalDateTime publishDate;
+
+    @NotEmpty(message = "Kitob yozuvchisi kiritilishi shart")
+    @ManyToMany
+    @JoinTable(
+            name = "book_authors",
+            joinColumns = { @JoinColumn(name = "book_id") },
+            inverseJoinColumns = { @JoinColumn(name = "author_id") })
+    private List<Author> authors = new ArrayList<>();
+
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_genres",
+            joinColumns = { @JoinColumn(name = "book_id") },
+            inverseJoinColumns = { @JoinColumn(name = "genre_id")})
+
+    private List<Genre> genres = new ArrayList<>();
 }

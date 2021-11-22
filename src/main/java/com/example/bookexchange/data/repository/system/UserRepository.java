@@ -1,5 +1,6 @@
 package com.example.bookexchange.data.repository.system;
 
+import com.example.bookexchange.data.model.main.Book;
 import com.example.bookexchange.data.model.system.Role;
 import com.example.bookexchange.data.model.system.User;
 import org.springframework.data.domain.Page;
@@ -31,4 +32,5 @@ public interface UserRepository extends CrudRepository<User, Long>, PagingAndSor
 
     @Query("select u from User u where u.email = ?1")
     User findByEmail(String email);
+
 }

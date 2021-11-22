@@ -18,7 +18,6 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
-@Table(name = "sys_users")
 public class User extends Auditable<String> implements Serializable {
 
     @Id
@@ -71,6 +70,7 @@ public class User extends Auditable<String> implements Serializable {
     private Date lastUse;
 
     private String name;
+
     @Lob
     private byte[] photo;
 
