@@ -1,4 +1,4 @@
-package com.example.bookexchange.data.controller.system;
+package com.example.bookexchange.data.controller;
 
 import com.example.bookexchange.data.config.SpringSecurityAuditorAware;
 import com.example.bookexchange.data.dto.system.UserDto;
