@@ -63,9 +63,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
           //      .antMatchers(USER_ENDPOINT).hasRole("USER")
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/**", "/swagger-ui/**", "/webjars/**")
+                .permitAll()
                 .antMatchers(REGISTER_ENDPOINT).permitAll()
                 .antMatchers(ADMIN_ENDPOINT).hasAnyRole("ADMIN","USER")
                 .anyRequest().authenticated()
+
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
     }

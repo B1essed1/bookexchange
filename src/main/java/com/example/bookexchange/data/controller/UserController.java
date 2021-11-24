@@ -109,4 +109,19 @@ public class UserController {
         userService.updateUser(user);
         return ResponseEntity.ok("SUCCESSFUL Deleted...");
     }
+
+    @PutMapping("/update")
+    public ResponseEntity<User> updateUserProfile(@RequestBody User user)
+    {
+        User shouldUpdatedUser = userService.findById(user.getId());
+        shouldUpdatedUser.setUsername(user.getUsername());
+        shouldUpdatedUser.setBirthday(user.getBirthday());
+        shouldUpdatedUser.setFirstName(user.getFirstName());
+        shouldUpdatedUser.setLastName(user.getLastName());
+        shouldUpdatedUser.setPhone(user.getPhone());
+        return ResponseEntity.ok(shouldUpdatedUser);
+    }
+
+
+
 }

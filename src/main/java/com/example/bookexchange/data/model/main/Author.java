@@ -25,6 +25,6 @@ public class Author extends Auditable<String> {
     private String names;
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 }
