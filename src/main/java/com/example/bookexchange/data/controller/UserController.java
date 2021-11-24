@@ -8,6 +8,8 @@ import com.example.bookexchange.data.security.jwt.JwtUser;
 import com.example.bookexchange.data.service.reference.ReferenceService;
 import com.example.bookexchange.data.service.system.RoleService;
 import com.example.bookexchange.data.service.system.UserService;
+import com.example.bookexchange.data.utility.UtilComponent;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -24,16 +26,13 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/api/v.1/user")
+@RequiredArgsConstructor
 public class UserController {
-
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private RoleService roleService;
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
-    @Autowired
-    private ReferenceService referenceService;
+    private final UserService userService;
+    private final RoleService roleService;
+    private final ReferenceService referenceService;
+    private final UtilComponent utilComponent;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @PreAuthorize("hasAuthority('List Users')")
@@ -53,7 +52,7 @@ public class UserController {
         return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/get-by-id/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/get-by-id", method = RequestMethod.GET)
     @PreAuthorize("hasAuthority('Get User')")
     public ResponseEntity<UserDto> userById(@PathVariable(name = "id") Long id) {
         User user = userService.findById(id);

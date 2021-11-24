@@ -112,7 +112,7 @@ public class RegistrationController {
             User user = new User();
             user.setConfirmationToken(newToken);
             user.setPhone(userDto.getPhone());
-//            user.setUsername(userDto.getUsername());
+            user.setUsername(userDto.getEmail());
 //            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));
@@ -192,8 +192,7 @@ public class RegistrationController {
             User user = new User();
             user.setConfirmationToken(newToken);
             user.setEmail(userDto.getEmail());
-            user.setUsername(userDto.getFirstName());
-            user.setUsername(userDto.getLastName());
+            user.setUsername(userDto.getEmail());
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));
             Role role = roleService.findByCode("ROLE_USER");
@@ -257,7 +256,7 @@ public class RegistrationController {
             User user = new User();
             user.setConfirmationToken(newToken);
             user.setPhone(userDto.getPhone());
-//            user.setUsername(userDto.getUsername());
+            user.setUsername(userDto.getEmail());
 //            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));
