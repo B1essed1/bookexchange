@@ -1,6 +1,8 @@
 package com.example.bookexchange.data.model.system;
 
 
+import com.example.bookexchange.data.model.main.Book;
+import com.example.bookexchange.data.model.main.Rating;
 import com.example.bookexchange.data.model.reference.Reference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -11,6 +13,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -62,11 +65,17 @@ public class User extends Auditable<String> implements Serializable {
     @JsonIgnore
     Reference status;
 
+
     @Column(name = "last_use")
     private Date lastUse;
 
     @Lob
     private byte[] photo;
 
-    private Integer rating;
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    Set<Rating> ratings = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.LAZY)
+    Set<Book> books = new HashSet<>();
 }

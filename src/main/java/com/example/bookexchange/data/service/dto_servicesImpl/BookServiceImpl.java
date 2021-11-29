@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class BookServiceImpl implements BookService
@@ -38,20 +39,15 @@ public class BookServiceImpl implements BookService
 
     }
 
+    // this method should return users books in his profile
     @Override
-    public Book deleteById(Long id)
+    public Set<Book> getBookByUserId(Long id)
     {
-        return null;
+        Set<Book> books = bookRepository.findBookByUserId(id);
+        if (books.isEmpty()) throw  new BookNotFoundException("this profile do not have any books ");
+        else return books;
     }
 
-    @Override
-    public List<Book> findAllBook()
-    {
-        List<Book> books = new ArrayList<>();
-
-        bookRepository.findAll().forEach(books::add);
-        return books;
-    }
 
     // this method returns suggested books while user searching or posting books by its name
     @Override

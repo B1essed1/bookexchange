@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 
 // every operation on book must do in this class
@@ -71,7 +72,12 @@ public class BookController
             shouldUpdateBook.setSize(book.getSize());
         }
         return new ResponseEntity(shouldUpdateBook, HttpStatus.OK);
-
     }
 
+    @GetMapping("get/{id}")
+    public  ResponseEntity<Set<Book>> getProfilesBooks(@PathVariable("id") Long id)
+    {
+        Set<Book> books = bookService.getBookByUserId(id);
+        return ResponseEntity.ok(books);
+    }
 }

@@ -2,6 +2,7 @@ package com.example.bookexchange.data.model.main;
 
 import com.example.bookexchange.data.model.enums.CoverType;
 import com.example.bookexchange.data.model.system.Auditable;
+import com.example.bookexchange.data.model.system.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -37,7 +38,7 @@ public class Book extends Auditable<String> {
     private LocalDateTime publishDate;
 
     @NotEmpty(message = "Kitob yozuvchisi kiritilishi shart")
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_authors",
             joinColumns = { @JoinColumn(name = "book_id") },
@@ -45,11 +46,14 @@ public class Book extends Auditable<String> {
     private List<Author> authors = new ArrayList<>();
 
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "book_genres",
             joinColumns = { @JoinColumn(name = "book_id") },
             inverseJoinColumns = { @JoinColumn(name = "genre_id")})
 
     private List<Genre> genres = new ArrayList<>();
+
+    @ManyToOne
+    private User user;
 }

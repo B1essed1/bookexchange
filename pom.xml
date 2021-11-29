@@ -111,7 +111,18 @@
             <artifactId>springfox-swagger2</artifactId>
             <version>3.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>bookexchange</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.cloudinary/cloudinary-http44 -->
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary-http44</artifactId>
+            <version>1.29.0</version>
+        </dependency>
 
     </dependencies>
 
