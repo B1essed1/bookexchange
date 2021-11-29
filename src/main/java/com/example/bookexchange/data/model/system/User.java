@@ -16,6 +16,7 @@ import java.util.Date;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 @Entity
+@Table(name = "sys_user")
 public class User extends Auditable<String> implements Serializable {
 
     @Id
@@ -63,8 +64,6 @@ public class User extends Auditable<String> implements Serializable {
 
     @Column(name = "last_use")
     private Date lastUse;
-
-    private String name;
 
     @Lob
     private byte[] photo;

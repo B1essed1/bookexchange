@@ -1,6 +1,5 @@
 package com.example.bookexchange.data.service.system;
 
-import com.example.bookexchange.data.exception.RecordNotFoundException;
 import com.example.bookexchange.data.model.system.Pagination;
 import com.example.bookexchange.data.model.system.User;
 import com.example.bookexchange.data.repository.system.RoleRepository;
