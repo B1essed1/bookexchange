@@ -26,7 +26,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 
-public class UserService implements UserDetailsService {
+public class UserService  {
 
    private final UserRepository userRepository;
    private final UserService userService;
@@ -110,8 +110,7 @@ public class UserService implements UserDetailsService {
         }
         return user.get();
     }
-
-    @Override
+/*    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.findByUsername(username);
         if (user == null) throw new UsernameNotFoundException("Username not found in this holly shit code ");
@@ -123,5 +122,7 @@ public class UserService implements UserDetailsService {
         JwtUser jwtUser = JwtUserFactory.create(user);
         log.info("IN loadUserByUsername - user with username: {} successfully loaded", username);
         return jwtUser;
-    }
+    }*/
+
+
 }
