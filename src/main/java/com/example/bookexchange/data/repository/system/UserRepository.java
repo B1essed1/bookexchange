@@ -22,7 +22,10 @@ import java.util.Set;
 
 @Repository
 public interface UserRepository extends CrudRepository<User, Long>, PagingAndSortingRepository<User, Long>, QueryByExampleExecutor<User> {
-    User findByUsername(String name);
+
+
+    @Query("select u from User u where u.username = ?1")
+    User findByUsername(String username);
 
     @Query("SELECT u FROM User u ORDER BY u.username")
     Page<User> findAll(Pageable paging);

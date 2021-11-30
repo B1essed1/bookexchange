@@ -26,11 +26,19 @@ public class BookController
         this.bookService = bookService;
     }
 
+    @GetMapping("all")
+    public ResponseEntity<List<Book>> getAllBooks()
+    {
+        List<Book> bookList = bookService.getAllBooks();
+
+        return ResponseEntity.ok(bookList);
+    }
+
     // this method saves books that created first time;
     @PostMapping("create/")
     public ResponseEntity<Book> saveBooks(@RequestBody Book book)
     {
-        // maybe here should be some extra security work to do  e.g: tokens
+
         Book books = bookService.save(book);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}").buildAndExpand(books.getId()).toUri();

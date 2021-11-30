@@ -11,4 +11,5 @@ public interface BookService
     Book findById(Long id);
     Set<Book> getBookByUserId(Long id);
     List<Book> getSuggestedBooks(String input);
+    List<Book> getAllBooks();
 }

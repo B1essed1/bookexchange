@@ -193,6 +193,8 @@ public class RegistrationController {
             user.setConfirmationToken(newToken);
             user.setEmail(userDto.getEmail());
             user.setUsername(userDto.getEmail());
+            user.setLastName(userDto.getLastName());
+            user.setFirstName(userDto.getFirstName());
             user.setExpireDate(new Date((new Date()).getTime() + (1000 * 60 * 2)));
             user.setStatus(referenceService.findByCode("INACTIVE"));
             Role role = roleService.findByCode("ROLE_USER");

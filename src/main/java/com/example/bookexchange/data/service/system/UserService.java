@@ -1,17 +1,21 @@
 package com.example.bookexchange.data.service.system;
 
-import com.example.bookexchange.data.exception.RecordNotFoundException;
 import com.example.bookexchange.data.model.system.Pagination;
 import com.example.bookexchange.data.model.system.User;
 import com.example.bookexchange.data.repository.system.RoleRepository;
 import com.example.bookexchange.data.repository.system.UserRepository;
+import com.example.bookexchange.data.security.jwt.JwtUser;
+import com.example.bookexchange.data.security.jwt.JwtUserFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 /**
@@ -21,16 +25,20 @@ import java.util.Optional;
 
 @Service
 @Slf4j
-public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+public class UserService implements UserDetailsService {
 
-    @Autowired
-    RoleRepository roleRepository;
+   private final UserRepository userRepository;
+   private final UserService userService;
+   private final RoleRepository roleRepository;
+   private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    BCryptPasswordEncoder passwordEncoder;
+    public UserService(UserRepository userRepository, UserService userService, RoleRepository roleRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public Page<User> findAll(Pagination pagination) {
         Pageable paging;
@@ -101,5 +109,19 @@ public class UserService {
             return null;
         }
         return user.get();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userService.findByUsername(username);
+        if (user == null) throw new UsernameNotFoundException("Username not found in this holly shit code ");
+        log.error("user-------------->", user);
+        log.info("user-------------->", user);
+        user.setLastUse(new Date(System.currentTimeMillis()));
+        userService.updateUser(user);
+        if (user == null) throw new UsernameNotFoundException("User with username: " + username + " not found");
+        JwtUser jwtUser = JwtUserFactory.create(user);
+        log.info("IN loadUserByUsername - user with username: {} successfully loaded", username);
+        return jwtUser;
     }
 }

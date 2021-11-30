@@ -18,7 +18,9 @@ import javax.servlet.http.HttpServletResponse;
 public class WebConfig implements Filter, WebMvcConfigurer {
 
     @Value("${webApi}")
-    String webApi;
+    private String webApi;
+
+
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

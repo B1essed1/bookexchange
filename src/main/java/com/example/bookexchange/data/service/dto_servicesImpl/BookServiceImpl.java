@@ -63,4 +63,13 @@ public class BookServiceImpl implements BookService
             return suggestedBooks;
         }
     }
+
+    @Override
+    public List<Book> getAllBooks()
+    {
+        List<Book> books = new ArrayList<>();
+        bookRepository.findAll().forEach(books::add);
+        return books;
+
+    }
 }
