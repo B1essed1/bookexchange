@@ -6,6 +6,7 @@ import com.example.bookexchange.data.model.main.Rating;
 import com.example.bookexchange.data.model.reference.Reference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -73,10 +74,11 @@ public class User extends Auditable<String> implements Serializable {
     @Lob
     private byte[] photo;
 
-
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    @JsonManagedReference
     Set<Rating> ratings = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user",fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "user")
+    @JsonManagedReference
     Set<Book> books = new HashSet<>();
 }

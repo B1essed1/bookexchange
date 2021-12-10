@@ -70,11 +70,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-          //      .antMatchers(USER_ENDPOINT).hasRole("USER")
                 .antMatchers(LOGIN_ENDPOINT).permitAll()
+
                 .antMatchers("/v2/api-docs", "/configuration/**", "/swagger-ui/**", "/webjars/**")
                 .permitAll()
                 .antMatchers(REGISTER_ENDPOINT).permitAll()
+                .antMatchers("/api/v.1/user/books/**").permitAll()
                 .antMatchers(ADMIN_ENDPOINT).hasAnyRole("ADMIN","USER")
                 .anyRequest().authenticated()
 

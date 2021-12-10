@@ -23,8 +23,6 @@ public class Author extends Auditable<String> {
     private Long id;
 
     private String names;
-
-
     @ManyToMany(fetch = FetchType.LAZY)
     private List<Book> books = new ArrayList<>();
 }

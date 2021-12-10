@@ -3,6 +3,8 @@ package com.example.bookexchange.data.model.main;
 import com.example.bookexchange.data.model.enums.CoverType;
 import com.example.bookexchange.data.model.system.Auditable;
 import com.example.bookexchange.data.model.system.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,14 +13,15 @@ import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-@EqualsAndHashCode(callSuper = true)
+//@EqualsAndHashCode(callSuper = true)
 @Entity
 @Table(name = "m_book")
-public class Book extends Auditable<String> {
+public class Book {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOOK_SEQUENCE")
@@ -32,13 +35,21 @@ public class Book extends Auditable<String> {
     private int size;
     @NotEmpty
     private String language;
-    private Enum<CoverType> coverType;
+
+    private String coverType;
+
+
     @NotEmpty(message = "kitob soni kiritilishi shart")
     private int quantity;
-    private LocalDateTime publishDate;
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private Date publishDate;
 
     @NotEmpty(message = "Kitob yozuvchisi kiritilishi shart")
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {
+            CascadeType.PERSIST,
+            CascadeType.MERGE
+    })
     @JoinTable(
             name = "book_authors",
             joinColumns = { @JoinColumn(name = "book_id") },
@@ -46,7 +57,11 @@ public class Book extends Auditable<String> {
     private List<Author> authors = new ArrayList<>();
 
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY,
+            cascade = {
+                    CascadeType.PERSIST,
+                    CascadeType.MERGE
+            })
     @JoinTable(
             name = "book_genres",
             joinColumns = { @JoinColumn(name = "book_id") },
@@ -55,5 +70,6 @@ public class Book extends Auditable<String> {
     private List<Genre> genres = new ArrayList<>();
 
     @ManyToOne
+    @JsonBackReference
     private User user;
 }

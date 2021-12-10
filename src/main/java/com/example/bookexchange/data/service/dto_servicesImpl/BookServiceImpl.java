@@ -32,7 +32,7 @@ public class BookServiceImpl implements BookService
     public Book findById(Long id)
     {
         Optional<Book> book = bookRepository.findById(id);
-        if (book.isEmpty())
+        if (book.isPresent())
         {
             return book.get();
         } else throw new BookNotFoundException("-----Book Not Found-----");

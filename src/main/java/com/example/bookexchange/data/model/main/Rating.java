@@ -1,6 +1,7 @@
 package com.example.bookexchange.data.model.main;
 
 import com.example.bookexchange.data.model.system.User;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -16,5 +17,6 @@ public class Rating
     private int rating;
 
     @ManyToOne
+    @JsonBackReference
     private User user;
 }

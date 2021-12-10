@@ -35,7 +35,7 @@ public class BookController
     }
 
     // this method saves books that created first time;
-    @PostMapping("create/")
+    @PostMapping("create")
     public ResponseEntity<Book> saveBooks(@RequestBody Book book)
     {
 
@@ -69,6 +69,7 @@ public class BookController
 
         if (shouldUpdateBook == null) throw new BookNotFoundException("Book Not Found");
         else {
+
             shouldUpdateBook.setName(book.getName());
             shouldUpdateBook.setAuthors(book.getAuthors());
             shouldUpdateBook.setCoverType(book.getCoverType());
@@ -78,6 +79,7 @@ public class BookController
             shouldUpdateBook.setQuantity(book.getQuantity());
             shouldUpdateBook.setPublishDate(book.getPublishDate());
             shouldUpdateBook.setSize(book.getSize());
+            bookService.save(shouldUpdateBook);
         }
         return new ResponseEntity(shouldUpdateBook, HttpStatus.OK);
     }
