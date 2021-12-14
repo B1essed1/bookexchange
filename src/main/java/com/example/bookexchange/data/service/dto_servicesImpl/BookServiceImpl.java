@@ -4,6 +4,7 @@ import com.example.bookexchange.data.exception.BookNotFoundException;
 import com.example.bookexchange.data.model.main.Book;
 import com.example.bookexchange.data.repository.BookRepository;
 import com.example.bookexchange.data.service.dto_services.BookService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class BookServiceImpl implements BookService
-{
+@Slf4j
+public class BookServiceImpl implements BookService {
     private final BookRepository bookRepository;
 
     public BookServiceImpl(BookRepository bookRepository) {
@@ -21,19 +22,16 @@ public class BookServiceImpl implements BookService
     }
 
     @Override
-    public Book save(Book book)
-    {
+    public Book save(Book book) {
         if (book != null)
-        return bookRepository.save(book);
+            return bookRepository.save(book);
         else throw new BookNotFoundException("--------Book not Found---------");
     }
 
     @Override
-    public Book findById(Long id)
-    {
+    public Book findById(Long id) {
         Optional<Book> book = bookRepository.findById(id);
-        if (book.isPresent())
-        {
+        if (book.isPresent()) {
             return book.get();
         } else throw new BookNotFoundException("-----Book Not Found-----");
 
@@ -41,32 +39,27 @@ public class BookServiceImpl implements BookService
 
     // this method should return users books in his profile
     @Override
-    public Set<Book> getBookByUserId(Long id)
-    {
+    public Set<Book> getBookByUserId(Long id) {
         Set<Book> books = bookRepository.findBookByUserId(id);
-        if (books.isEmpty()) throw  new BookNotFoundException("this profile do not have any books ");
+        if (books.isEmpty()) throw new BookNotFoundException("this profile do not have any books ");
         else return books;
     }
 
 
     // this method returns suggested books while user searching or posting books by its name
     @Override
-    public List<Book> getSuggestedBooks(String input)
-    {
-        List<Book> suggestedBooks = bookRepository.findBookByNameLikeIgnoreCase(input);
+    public List<Book> getSuggestedBooks(String input) {
+        List<Book> suggestedBooks = bookRepository.findByNameContaining(input);
 
-        if (suggestedBooks.isEmpty())
-        {
-            throw  new BookNotFoundException("------ this kind of book has not its similarity ------ ");
-        } else
-        {
+        if (suggestedBooks.isEmpty()) {
+            throw new BookNotFoundException("------ this kind of book has not its similarity ------ ");
+        } else {
             return suggestedBooks;
         }
     }
 
     @Override
-    public List<Book> getAllBooks()
-    {
+    public List<Book> getAllBooks() {
         List<Book> books = new ArrayList<>();
         bookRepository.findAll().forEach(books::add);
         return books;

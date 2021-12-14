@@ -9,8 +9,12 @@ import java.util.List;
 import java.util.Set;
 
 @Repository
-public interface BookRepository extends CrudRepository<Book, Long> {
-    List<Book> findBookByNameLikeIgnoreCase(String input);
+public interface BookRepository extends CrudRepository<Book, Long>
+{
 
+    List<Book> findBookByNameLike(String input);
+    List<Book> findByNameContaining(String string);
+
+    List<Book> findByNameLike(String input);
     Set<Book> findBookByUserId(Long id);
 }
