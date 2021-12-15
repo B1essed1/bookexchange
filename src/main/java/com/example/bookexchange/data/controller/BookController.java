@@ -93,9 +93,17 @@ public class BookController {
         return new ResponseEntity(shouldUpdateBook, HttpStatus.OK);
     }
 
-    @GetMapping("get/{id}")
+    @GetMapping("userbooks/{id}")
     public ResponseEntity<Set<Book>> getProfilesBooks(@PathVariable("id") Long id) {
         Set<Book> books = bookService.getBookByUserId(id);
         return ResponseEntity.ok(books);
+    }
+
+    @GetMapping("get/{id}")
+    public  ResponseEntity<Book> getBookById(@PathVariable("id") Long id){
+
+        Book book = bookService.findById(id);
+        if(book == null) throw  new BookNotFoundException("Book does not exist ");
+        else return ResponseEntity.ok(book);
     }
 }
